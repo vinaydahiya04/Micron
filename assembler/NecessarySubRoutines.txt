@@ -1,0 +1,21 @@
+$the following two subroutines and labels should mandatorily be in ypur program to avoid any error$
+
+POW: 	CLA
+	STA SR
+	STA TR
+ 	STA DR
+ 	STA TMR
+	STA AR
+	STA PC
+	STA IR
+
+HEA: 	LDA TMR
+	CMA
+	INC
+	LOP:ISZ
+	BUN LOP
+	OR 02H
+	STA SR
+
+	
+	
