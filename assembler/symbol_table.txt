@@ -1,3 +1,5 @@
 SYMBOL TABLE(Constructed after first pass of the assembler)
 LABEL    LOCATION
-LOGO          17
+HEA          526
+LOP          534
+POW          516

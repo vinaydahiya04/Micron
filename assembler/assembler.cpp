@@ -49,9 +49,43 @@ string IntToBinary(int a){
 		final += char(v+48);
 
     }
+     reverse(final.begin(), final.end());
+
+
+
 
 	return final;
 }
+
+string IntToBinary12(int a){
+	string final = "";
+    while (a > 0) {
+
+        // storing remainder in binary array
+        int v= a % 2;
+        a = a / 2;
+		final += char(v+48);
+
+    }
+     reverse(final.begin(), final.end());
+
+    int l = final.length();
+
+    string semi = "";
+
+    for(int i = 0;i<12-l;i++){
+            semi += "0";
+
+    }
+
+    semi += final;
+
+    final = semi;
+
+
+	return final;
+}
+
 
 bool first_pass(){
     bool br = false;
@@ -77,7 +111,7 @@ bool first_pass(){
             string a = "";
             for(int i = 4;i<g.length();i++)a += g[i];
 
-            lc = HexToNumber(a);
+            lc = HexToNumber(a)-1;
 
         }
 
@@ -100,9 +134,14 @@ bool first_pass(){
 bool second_pass(){
 	int lc = -1;
 	for(auto g: line){
+
+
 		lc++;
+
+
         int ind = 0;
         transform(g.begin(), g.end(), g.begin(), ::toupper);
+
         if(g[0] =='$'){
             lc--;
             continue;
@@ -112,7 +151,7 @@ bool second_pass(){
             string prev = g.substr(0,3);
             string org = "ORG";
             if(prev!=org){
-                cout<<"Error, Program SHould Start with ORG X";
+                cout<<"Error, Program Should Start with ORG X";
                 return false;
             }
 
@@ -121,7 +160,11 @@ bool second_pass(){
 
             lc = HexToNumber(a);
 
+            lc--;
+            continue;
+
         }
+
 
 		ind = 0;
 
@@ -132,9 +175,13 @@ bool second_pass(){
 			}
 		}
 
+
 		if(ind!=0){
 			g = g.substr(ind+2,g.length()-ind-2);
 		}
+
+
+
 
 		vector<string> words;
 
@@ -144,6 +191,7 @@ bool second_pass(){
 
 			if(g[i] == ' '){
 				words.push_back(pp);
+
 				pp="";
 			}
 			else{
@@ -151,7 +199,13 @@ bool second_pass(){
 			}
 		}
 
+		words.push_back(pp);
+
+
+
+
 		string operato = words[0];
+
 
 		bool found=  false;
 
@@ -162,6 +216,7 @@ bool second_pass(){
 				break;
 			}
 		}
+
 
 		if(found)continue;
 
@@ -174,8 +229,14 @@ bool second_pass(){
 		}
 
 		if(found)continue;
+		if(words.size()<=1)continue;
 
 		string operand = words[1];
+		/*if(symbol_table.count(operand)>0){
+            cout<<IntToBinary(lc)<<" "<<symbol_table[operand]<<"-"<<endl;
+
+            continue;
+		}*/
 
 		for(auto g: memory_ref){
 			if(operato == g.first){
@@ -188,6 +249,15 @@ bool second_pass(){
 				else{
 					cout<<g.second;
 				}
+
+
+				if(symbol_table.count(operand)>0){
+            cout<<IntToBinary12(symbol_table[operand])<<endl;
+            found = true;
+
+
+		}
+                if(found)break;
 
 
 				for(auto v: registers){
@@ -226,24 +296,27 @@ bool second_pass(){
 			if(found)break;
 		}
 
-	}
+	/*cout<<lc<<" "<<g<<endl;
+        */}
+        return false;
 }
 
 
 int main(){
 
 
-
+    #ifndef ASSEMBLER
     freopen("assembly_language_code.txt","r",stdin);
 	freopen("object_code.txt","w",stdout);
+	#endif
     ofstream fout;
     fout.open("symbol_table.txt");
 
-    memory_ref["LDA"]="0000";
-	memory_ref["STA"]="0001";
-	memory_ref["BUN"]="0010";
+    memory_ref["STA"]="0000";
+	memory_ref["LDA"]="0001";
+	memory_ref["ISZ"]="0010";
 	memory_ref["BSA"]="0011";
-	memory_ref["ISZ"]="0100";
+	memory_ref["BUN"]="0100";
 	memory_ref["OR"]="0101";
 	memory_ref["NOR"]="0110";
 
@@ -277,7 +350,8 @@ int main(){
 	register_ref["INC"]="7004H";
 	register_ref["LSA"]="7002H";
 
-	
+
+
 	registers["AC"]="00000001";
 	registers["DR"]="00000010";
 	registers["IR"]="00000100";
@@ -286,11 +360,12 @@ int main(){
 	registers["SR"]="00100000";
 	registers["TR"]="01000000";
 	registers["TMR"]="10000000";
+	registers["INPR"]="10000000";
 
-	io_instructions["INP"] = "F800";
-	io_instructions["OUT"] = "F800";
-	io_instructions["SKI"] = "F800";
-	io_instructions["SKO"] = "F800";
+	io_instructions["INP"] = "F800H";
+	io_instructions["OUT"] = "F400H";
+	io_instructions["SKI"] = "F200H";
+	io_instructions["SKO"] = "F100H";
 
 
 
@@ -313,10 +388,11 @@ int main(){
 	fout<<"LABEL    LOCATION"<<endl;
 	for(auto it: symbol_table){
         fout<<it.first<<"          "<<it.second<<endl;
-		
+
 	}
 	fout.close();
 	cout<<"Machine Code"<<endl<<endl;
+
 	second_pass();
 
 
