@@ -217,6 +217,10 @@ bool second_pass(){
 		//bool found=  false;
 
 		if(register_ref.count(operato)>0){
+            if(words.size()>1){
+                cout<<"  ERROR : REGISTER REFERNCE INSTRUCTION CANT HAVE AN OPERAND"<<endl;
+                return false;
+            }
             cout<<IntToBinary(lc)<<" "<<HexToBinary(register_ref[operato])<<endl;
             continue;
 
@@ -234,6 +238,10 @@ bool second_pass(){
 		if(found)continue;*/
 
             if(io_instructions.count(operato)>0){
+                if(words.size()>1){
+                cout<<"  ERROR : INPUT OUTPUT INSTRUCTION CANT HAVE AN OPERAND"<<endl;
+                return false;
+            }
             cout<<IntToBinary(lc)<<" "<<HexToBinary(io_instructions[operato])<<endl;
             continue;
 
