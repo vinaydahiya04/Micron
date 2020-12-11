@@ -88,9 +88,9 @@ string IntToBinary12(int a){
 
 
 bool first_pass(){
-    bool br = false;
+
     int lc = -1;
-    bool con = false;
+
     for(auto g: line){
         lc++;
         int ind = 0;
@@ -104,7 +104,7 @@ bool first_pass(){
             string prev = g.substr(0,3);
             string org = "ORG";
             if(prev!=org){
-                cout<<"Error, Program SHould Start with ORG X";
+                cout<<"  ERROR : INCORRECT FIRST STATEMENT"<<endl;
                 return false;
             }
 
@@ -153,7 +153,7 @@ bool second_pass(){
             string prev = g.substr(0,3);
             string org = "ORG";
             if(prev!=org){
-                cout<<"Error, Program Should Start with ORG X";
+                cout<<"  ERROR : INCORRECT FIRST STATEMENT"<<endl;
                 return false;
             }
 
@@ -204,7 +204,7 @@ bool second_pass(){
 		words.push_back(pp);
 
 		if(words.size()>3){
-            cout<<"Incorrect Instruction Please check your code and try again..No more than three words are allowed in an instruction"<<endl;
+            cout<<"  ERROR : INSTRUCTION SIZE EXCEEDS MAX SIZE"<<endl;
             return false;
 		}
 
@@ -214,7 +214,7 @@ bool second_pass(){
 		string operato = words[0];
 
 
-		bool found=  false;
+		//bool found=  false;
 
 		if(register_ref.count(operato)>0){
             cout<<IntToBinary(lc)<<" "<<HexToBinary(register_ref[operato])<<endl;
@@ -279,7 +279,7 @@ bool second_pass(){
 					continue;
 
 				}
-				else{
+				else if(operand[2] == 'H'){
 					cout<<"0001";
 					cout<<HexToBinary(operand)<<endl;
 					continue;
@@ -287,17 +287,19 @@ bool second_pass(){
 				}
 
 
-            cout<<"INVALID OPERAND FOR MEMORY REFERENCE INSTRUCTION"<<endl;
+
+
+            cout<<"  ERROR : INVALID OPERAND FOR MEMORY REFERENCE INSTRUCTION"<<endl;
             return false;
 
 		}
 
 
 
-		if(!found){
-            cout<<"invalid Instruction "<<endl;
+
+            cout<<"  ERROR : INVALID OPERATOR"<<endl;
             return false;
-		}
+
 
 	}
         return true;
@@ -307,10 +309,10 @@ bool second_pass(){
 int main(){
 
 
-    #ifndef ASSEMBLER
+
     freopen("assembly_language_code.txt","r",stdin);
 	freopen("object_code.txt","w",stdout);
-	#endif
+
     ofstream fout;
     fout.open("symbol_table.txt");
 
