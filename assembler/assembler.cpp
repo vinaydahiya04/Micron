@@ -133,6 +133,7 @@ bool first_pass(){
 
 bool second_pass(){
 	int lc = -1;
+
 	for(auto g: line){
 
 
@@ -200,6 +201,11 @@ bool second_pass(){
 		}
 
 		words.push_back(pp);
+
+		if(words.size()>3){
+            cout<<"Incorrect Instruction Please check your code and try again..No more than three words are allowed in an instruction"<<endl;
+            return false;
+		}
 
 
 
@@ -296,9 +302,14 @@ bool second_pass(){
 			if(found)break;
 		}
 
+		if(!found){
+            cout<<"invalid Instruction "<<endl;
+            return false;
+		}
+
 	/*cout<<lc<<" "<<g<<endl;
         */}
-        return false;
+        return true;
 }
 
 
@@ -354,13 +365,13 @@ int main(){
 
 	registers["AC"]="00000001";
 	registers["DR"]="00000010";
-	registers["IR"]="00000100";
+	registers["INPR"]="00000100";
 	registers["AR"]="00001000";
 	registers["PC"]="00010000";
 	registers["SR"]="00100000";
 	registers["TR"]="01000000";
 	registers["TMR"]="10000000";
-	registers["INPR"]="10000000";
+
 
 	io_instructions["INP"] = "F800H";
 	io_instructions["OUT"] = "F400H";
@@ -391,9 +402,10 @@ int main(){
 
 	}
 	fout.close();
-	cout<<"Machine Code"<<endl<<endl;
+	cout<<"Machine Code"<<endl;
+	cout<<"Location"<<"    Binary Data"<<endl;
 
-	second_pass();
+	res = second_pass();
 
 
     return 0;
