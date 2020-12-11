@@ -4,12 +4,12 @@ using namespace std;
 
 
 
-map<string,int> symbol_table;
-map<string,string> registers;
-map<string,string> memory_ref;
-map<string,string> register_ref;
-map<string,string> hexadecimals;
-map<string,string> io_instructions;
+unordered_map<string,int> symbol_table;
+unordered_map<string,string> registers;
+unordered_map<string,string> memory_ref;
+unordered_map<string,string> register_ref;
+unordered_map<string,string> hexadecimals;
+unordered_map<string,string> io_instructions;
 vector<string>line;
 
 
@@ -140,6 +140,7 @@ bool second_pass(){
 		lc++;
 
 
+
         int ind = 0;
         transform(g.begin(), g.end(), g.begin(), ::toupper);
 
@@ -215,7 +216,13 @@ bool second_pass(){
 
 		bool found=  false;
 
-		for(auto g: register_ref){
+		if(register_ref.count(operato)>0){
+            cout<<IntToBinary(lc)<<" "<<HexToBinary(register_ref[operato])<<endl;
+            continue;
+
+		}
+
+		/*for(auto g: register_ref){
 			if(operato == g.first){
 				cout<<IntToBinary(lc)<<" "<<HexToBinary(g.second)<<endl;
 				found = true;
@@ -224,91 +231,75 @@ bool second_pass(){
 		}
 
 
-		if(found)continue;
+		if(found)continue;*/
 
-		for(auto g: io_instructions){
-			if(operato == g.first){
-				cout<<IntToBinary(lc)<<" "<<HexToBinary(g.second)<<endl;
-				found = true;
-				break;
-			}
+            if(io_instructions.count(operato)>0){
+            cout<<IntToBinary(lc)<<" "<<HexToBinary(io_instructions[operato])<<endl;
+            continue;
+
 		}
 
-		if(found)continue;
+
+
+
 		if(words.size()<=1)continue;
 
 		string operand = words[1];
-		/*if(symbol_table.count(operand)>0){
-            cout<<IntToBinary(lc)<<" "<<symbol_table[operand]<<"-"<<endl;
 
-            continue;
-		}*/
-
-		for(auto g: memory_ref){
-			if(operato == g.first){
-				cout<<IntToBinary(lc)<<" ";
-				if(words.size()>2){
-					string lk = g.second;
+		if(memory_ref.count(operato)>0){
+            cout<<IntToBinary(lc)<<" ";
+            if(words.size()>2){
+					string lk = memory_ref[operato];
 					lk[0] = '1';
 					cout<<lk;
 				}
 				else{
-					cout<<g.second;
+					cout<<memory_ref[operato];
 				}
-
 
 				if(symbol_table.count(operand)>0){
             cout<<IntToBinary12(symbol_table[operand])<<endl;
-            found = true;
+            continue;
+
+
+				}
+
+
+                if(registers.count(operand)>0){
+            cout<<"0000"<<registers[operand]<<endl;
+            continue;
 
 
 		}
-                if(found)break;
 
+		if(operand[0] == '['){
 
-				for(auto v: registers){
-					if(operand == v.first){
-						found = true;
-						cout<<"0000"<<v.second<<endl;
-						break;
-					}
-				}
-				if(found)break;
-
-				for(auto v: symbol_table){
-					if(operand == v.first){
-						found = true;
-
-						cout<<IntToBinary(v.second)<<endl;
-						break;
-					}
-				}
-
-				if(found)break;
-
-				if(operand[0] == '['){
-					found = true;
 					string q = operand.substr(1,operand.length()-2);
 					cout<<HexToBinary(q)<<endl;
+					continue;
 
 				}
 				else{
 					cout<<"0001";
 					cout<<HexToBinary(operand)<<endl;
-					found = true;
+					continue;
+
 				}
 
-			}
-			if(found)break;
+
+            cout<<"INVALID OPERAND FOR MEMORY REFERENCE INSTRUCTION"<<endl;
+            return false;
+
 		}
+
+
 
 		if(!found){
             cout<<"invalid Instruction "<<endl;
             return false;
 		}
 
-	/*cout<<lc<<" "<<g<<endl;
-        */}
+	}
         return true;
 }
 

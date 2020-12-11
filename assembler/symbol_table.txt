@@ -1,5 +1,5 @@
 SYMBOL TABLE(Constructed after first pass of the assembler)
 LABEL    LOCATION
-HEA          526
 LOP          534
 POW          516
+HEA          526
